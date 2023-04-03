@@ -1,0 +1,10 @@
+To be able to run this project in VS Code, please complete the following steps.
+
+*Initial Setup*
+    Python 3.7.9 setup:
+        Go to https://www.python.org/downloads/release/python-379/
+        Install Python 3.7.9 with the 64-bit installer
+        In VS Code, select Python interpreter (Ctrl/Command + Shift + P) and choose 3.7.9
+
+    In VS Code terminal:
+        pip install -r requirements.txt
