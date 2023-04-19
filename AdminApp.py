@@ -5,6 +5,9 @@ from PyQt5.QtGui import *
 
 import platform
 
+import string
+import random 
+
 import mysql.connector as mc
 import os
 from dotenv import load_dotenv
@@ -27,12 +30,15 @@ class Window(QWidget):
         self.addUserButton.clicked.connect(self.recordInfo)
         self.deleteUserButton = QPushButton("Delete User")
         self.deleteUserButton.clicked.connect(self.deleteRow)
+        self.changeAdminCodeButton = QPushButton("ChangeAdminCode")
+        self.changeAdminCodeButton.clicked.connect(self.changeAdminCode)
+        
         #self.editUserButton = QPushButton("Edit User")
 
         self.buttonGridLayout = QGridLayout()
         self.buttonGridLayout.addWidget(self.addUserButton, 0, 0)
         self.buttonGridLayout.addWidget(self.deleteUserButton, 0, 1)
-        #self.buttonGridLayout.addWidget(self.editUserButton, 0, 2)
+        self.buttonGridLayout.addWidget(self.changeAdminCodeButton, 0, 2)
         
         self.tableWidget = QTableWidget()
         self.tableWidget.setColumnCount(2)
@@ -47,6 +53,12 @@ class Window(QWidget):
         # header = self.tableWidget.horizontalHeader()
         # header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
         # header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        
+        self.adminName_Label = QLabel()
+        self.adminCode_Label = QLabel()
+            
+        self.buttonGridLayout.addWidget(self.adminName_Label, 1, 0)
+        self.buttonGridLayout.addWidget(self.adminCode_Label, 1, 1)
 
         self.generalLayout.addLayout(self.buttonGridLayout, 0, 0)
         self.generalLayout.addWidget(self.tableWidget, 1, 0)
@@ -66,12 +78,30 @@ class Window(QWidget):
             )
             
             mycursor = mydb.cursor()
-
+            
+            mycursor.execute("SELECT users_name FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
+            myresult = mycursor.fetchall()
+            #print(myresult)
+            #print(myresult[0])
+            userName = ''.join(myresult[0])
+            #print(userName)
+            
+            mycursor.execute("SELECT users_password FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
+            myresult2 = mycursor.fetchall()
+            #print(myresult2)
+            #print(myresult2[0])
+            code = ''.join(myresult2[0])
+            #print(code)
+            self.adminCode_Label.clear()
+            self.adminName_Label.setText("Username: %s" % userName)
+            self.adminCode_Label.setText("Code: %s" % code)
+            
             mycursor.execute("SELECT * FROM users")
 
             result = mycursor.fetchall()
             self.tableWidget.setRowCount(0)
-            for row_number, row_data in enumerate(result):
+            #print(result[1:])
+            for row_number, row_data in enumerate(result[1:]):
                 self.tableWidget.insertRow(row_number)
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
@@ -123,6 +153,40 @@ class Window(QWidget):
         self.g.setGeometry(int(self.frameGeometry().width()/2) - 150, int(self.frameGeometry().height()/2) - 150, 300, 300)
         self.g.show()
                       
+    
+    def changeAdminCode(self):  
+        
+        try:
+            mydb = mc.connect(
+                host=os.environ.get('HOST'),
+                user=os.getenv('NAME'),
+                password=os.getenv('PASSWORD'), 
+                database=os.getenv('DATABASE')             
+            )
+            
+            mycursor = mydb.cursor()
+            randomGen = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k=10))
+            mycursor.execute("UPDATE users SET users_password = '%s' WHERE users_name = '%s'" % (randomGen, os.getenv('ADMIN')))
+            
+            mycursor.execute("SELECT users_password FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
+            myresult3 = mycursor.fetchall()
+            print(myresult3)
+            print(myresult3[0])
+            code = ''.join(myresult3[0])
+            print(code)
+            #self.adminName_Label = QLabel("Username: %s" % userName)
+            #self.adminCode_Label.setText("Code: %s" % "")
+            #self.adminCode_Label.setText("Code: %s" % code)
+            #self.tableWidget.resizeRowsToContents()
+            mydb.commit()
+            
+            self.DBConnect()
+            #self.g.close()
+            mydb.close()
+        except mydb.Error as e:
+            print("Failed To Connect to Database")
+            
     def gatheringInfo(self):  
         try:
             mydb = mc.connect(
