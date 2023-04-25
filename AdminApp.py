@@ -42,7 +42,7 @@ class Window(QWidget):
         
         self.tableWidget = QTableWidget()
         self.tableWidget.setColumnCount(2)
-        self.tableWidget.setHorizontalHeaderLabels(["Name", "Code"])
+        self.tableWidget.setHorizontalHeaderLabels(["Username", "Code"])
         header = self.tableWidget.horizontalHeader()       
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
@@ -56,12 +56,18 @@ class Window(QWidget):
         
         self.adminName_Label = QLabel()
         self.adminCode_Label = QLabel()
-            
+        
+        self.exportButton = QPushButton("Export")
+        load_dotenv('config.env')
+        self.exportButton.clicked.connect(self.export)
+        
         self.buttonGridLayout.addWidget(self.adminName_Label, 1, 0)
         self.buttonGridLayout.addWidget(self.adminCode_Label, 1, 1)
 
         self.generalLayout.addLayout(self.buttonGridLayout, 0, 0)
         self.generalLayout.addWidget(self.tableWidget, 1, 0)
+        self.generalLayout.addWidget(self.exportButton, 2, 0)
+        
 
         self.setLayout(self.generalLayout)
         
@@ -86,7 +92,7 @@ class Window(QWidget):
             userName = ''.join(myresult[0])
             #print(userName)
             
-            mycursor.execute("SELECT users_password FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
+            mycursor.execute("SELECT users_code FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
             myresult2 = mycursor.fetchall()
             #print(myresult2)
             #print(myresult2[0])
@@ -152,8 +158,43 @@ class Window(QWidget):
 
         self.g.setGeometry(int(self.frameGeometry().width()/2) - 150, int(self.frameGeometry().height()/2) - 150, 300, 300)
         self.g.show()
-                      
     
+    def export(self):
+        try:
+            mydb = mc.connect(
+                host=os.environ.get('HOST'),
+                user=os.getenv('NAME'),
+                password=os.getenv('PASSWORD'), 
+                database=os.getenv('DATABASE')             
+            )
+            
+            mycursor = mydb.cursor()
+
+            mycursor.execute("Select users_name, users_code from users")
+
+            result = mycursor.fetchall()
+            
+            all_users_name = []
+            all_users_code = []
+            
+            for user_name, user_password in result:
+                all_users_name.append(user_name)
+                all_users_code.append(user_password)
+            
+            dictionary = {
+                "NAME": all_users_name, "CODE": all_users_code
+            }
+
+            df = pd.DataFrame(dictionary)
+            if platform.system() == 'Windows':
+                df.to_csv("C:\\temp\AllUsers.csv", na_rep="None")
+            else:
+                df.to_csv(os.path.expanduser("~/Desktop/AllUsers.csv"))
+            QMessageBox.about(self, "Warning", "Check your desktop for the csv file!")
+            mydb.close()
+        except mydb.Error as e:
+           print("Failed To Connect to Database")
+                                
     def changeAdminCode(self):  
         
         try:
@@ -167,9 +208,9 @@ class Window(QWidget):
             mycursor = mydb.cursor()
             randomGen = ''.join(random.choices(string.ascii_uppercase +
                              string.digits, k=10))
-            mycursor.execute("UPDATE users SET users_password = '%s' WHERE users_name = '%s'" % (randomGen, os.getenv('ADMIN')))
+            mycursor.execute("UPDATE users SET users_code = '%s' WHERE users_name = '%s'" % (randomGen, os.getenv('ADMIN')))
             
-            mycursor.execute("SELECT users_password FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
+            mycursor.execute("SELECT users_code FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
             myresult3 = mycursor.fetchall()
             print(myresult3)
             print(myresult3[0])
