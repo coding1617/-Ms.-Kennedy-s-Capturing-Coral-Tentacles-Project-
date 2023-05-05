@@ -16,6 +16,8 @@ from datetime import date, datetime
 import pandas as pd
 
 from AddUserFile import AddUserFile
+
+from connectToDatabase import *
 class Window(QWidget):
     
     def __init__(self):
