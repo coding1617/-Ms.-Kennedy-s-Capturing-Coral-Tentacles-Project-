@@ -26,7 +26,6 @@ class Window(QWidget):
         self.move(0,0)
 
         self.generalLayout = QGridLayout()
-        # layout = QVBoxLayout()
 
         self.addUserButton = QPushButton("Add User")
         self.addUserButton.clicked.connect(self.recordInfo)
@@ -35,8 +34,6 @@ class Window(QWidget):
         self.changeAdminCodeButton = QPushButton("ChangeAdminCode")
         self.changeAdminCodeButton.clicked.connect(self.changeAdminCode)
         
-        #self.editUserButton = QPushButton("Edit User")
-
         self.buttonGridLayout = QGridLayout()
         self.buttonGridLayout.addWidget(self.addUserButton, 0, 0)
         self.buttonGridLayout.addWidget(self.deleteUserButton, 0, 1)
