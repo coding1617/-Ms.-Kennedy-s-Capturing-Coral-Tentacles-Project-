@@ -31,7 +31,7 @@ class Window(QWidget):
         self.addUserButton.clicked.connect(self.recordInfo)
         self.deleteUserButton = QPushButton("Delete User")
         self.deleteUserButton.clicked.connect(self.deleteRow)
-        self.changeAdminCodeButton = QPushButton("ChangeAdminCode")
+        self.changeAdminCodeButton = QPushButton("Change Admin Code")
         self.changeAdminCodeButton.clicked.connect(self.changeAdminCode)
         
         self.buttonGridLayout = QGridLayout()
@@ -46,12 +46,6 @@ class Window(QWidget):
         header.setSectionResizeMode(0, QHeaderView.Stretch)
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         self.tableWidget.setObjectName("tableWidget")
-
-
-        # Bring back later:
-        # header = self.tableWidget.horizontalHeader()
-        # header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
-        # header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         
         self.adminName_Label = QLabel()
         self.adminCode_Label = QLabel()
@@ -66,6 +60,9 @@ class Window(QWidget):
         self.generalLayout.addLayout(self.buttonGridLayout, 0, 0)
         self.generalLayout.addWidget(self.tableWidget, 1, 0)
         self.generalLayout.addWidget(self.exportButton, 2, 0)
+
+        self.quit_shortcut = QShortcut(QKeySequence("Ctrl+W"), self)
+        self.quit_shortcut.activated.connect(self.close)
         
 
         self.setLayout(self.generalLayout)
@@ -86,7 +83,7 @@ class Window(QWidget):
             
             mycursor.execute("SELECT users_name FROM users WHERE users_name = '%s'" % os.getenv('ADMIN'))
             myresult = mycursor.fetchall()
-            #print(myresult)
+            # print(myresult)
             #print(myresult[0])
             userName = ''.join(myresult[0])
             #print(userName)
