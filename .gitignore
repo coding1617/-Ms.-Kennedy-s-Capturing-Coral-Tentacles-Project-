@@ -1,2 +1,4 @@
 config.env
 __pycache__
+output
+config.py

@@ -1,10 +1,14 @@
 import mysql.connector as mc
 import os
 
+from config import *
+
 def connectToDatabase():
     mydb = mc.connect(
-        host=os.environ.get('HOST'),
-        user=os.getenv('NAME'),
-        password=os.getenv('PASSWORD'), 
-        database=os.getenv('DATABASE')             
+        host=getHost(),
+        user=getName(),
+        password=getPass(), 
+        database=getDB()             
     )
+
+    return mydb
