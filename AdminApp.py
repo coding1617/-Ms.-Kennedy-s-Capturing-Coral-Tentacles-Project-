@@ -228,7 +228,7 @@ class Window(QWidget):
                 df.to_csv("C:\\temp\CoralAllUsers.csv", na_rep="None")
             else:
                 df.to_csv(os.path.expanduser("~/Desktop/AllUsers.csv"))
-            QMessageBox.about(self, "Warning", "Check your desktop for the csv file! (See temp folder for Windows in C: drive)")
+            QMessageBox.about(self, "Warning", "Check your desktop for the csv file!\n*Windows: See temp folder in C: drive*")
             mydb.close()
         except mydb.Error as e:
            print("Failed To Connect to Database")
