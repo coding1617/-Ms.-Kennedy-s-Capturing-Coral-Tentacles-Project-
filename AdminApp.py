@@ -17,6 +17,7 @@ import pandas as pd
 
 from AddUserFile import AddUserFile
 
+from basic_styling import *
 from connectToDatabase import *
 from config import *
 
@@ -197,11 +198,25 @@ class Window(QWidget):
                     
     def recordInfo(self):   
         self.g = AddUserFile()
-        self.g.submitButton.clicked.connect(self.gatheringInfo)
-        self.g.submit_shortcut.activated.connect(self.gatheringInfo)
+        self.g.submitButton.clicked.connect(self.checkBeforeGatheringInfo)
+        self.g.submit_shortcut.activated.connect(self.checkBeforeGatheringInfo)
 
         self.g.setGeometry(int(self.frameGeometry().width()/2) - 150, int(self.frameGeometry().height()/2) - 150, 300, 300)
         self.g.show()
+
+    def checkBeforeGatheringInfo(self):
+        nameExists = False
+        
+        for row in range(self.tableWidget.rowCount()):
+            if self.tableWidget.item(row, 0).text() == self.g.get_user_name():
+                nameExists = True
+
+        if nameExists or self.g.get_user_name == 'RESEARCHTEACHER':
+            msg = QMessageBox(QMessageBox.Critical, "Error", "Username already exists.")
+            msg.setStyleSheet(get_basic_styling())
+            msg.exec_()
+        else:
+            self.gatheringInfo()
     
     def export(self):
         try:
@@ -234,7 +249,6 @@ class Window(QWidget):
            print("Failed To Connect to Database")
                                 
     def changeAdminCode(self):  
-        
         try:
             mydb = connectToDatabase()
             mycursor = mydb.cursor()
