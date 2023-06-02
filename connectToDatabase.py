@@ -1,5 +1,4 @@
 import mysql.connector as mc
-import os
 
 from config import *
 
