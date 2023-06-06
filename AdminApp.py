@@ -207,10 +207,11 @@ class Window(QWidget):
         nameExists = False
         
         for row in range(self.tableWidget.rowCount()):
-            if self.tableWidget.item(row, 0).text() == self.g.get_user_name():
+            if (self.tableWidget.item(row, 0).text().lower() == self.g.get_user_name().lower()
+            or getAdmin().lower() == self.g.get_user_name().lower()):
                 nameExists = True
 
-        if nameExists or self.g.get_user_name == 'RESEARCHTEACHER':
+        if nameExists:
             msg = QMessageBox(QMessageBox.Critical, "Error", "Username already exists.")
             msg.setStyleSheet(get_basic_styling())
             msg.exec_()
