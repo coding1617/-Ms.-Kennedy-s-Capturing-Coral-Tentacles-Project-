@@ -171,7 +171,11 @@ class Window(QWidget):
             currentRow = self.tableWidget.currentRow()
             item = self.tableWidget.selectedItems()
             if (len(item) < 1):
-                QMessageBox.about(self, "Warning", "Please select an entry to delete.")
+                msg = QMessageBox(QMessageBox.Warning, "Warning", "Please select an entry to delete.")
+                msg.setStyleSheet(get_basic_styling())
+                msg.exec_()
+
+                # QMessageBox.about(self, "Warning", "Please select an entry to delete.")
             else:             
                 question = QMessageBox()
                 response = question.question(self,'', "Are you sure you want to delete the row?", question.Yes | question.No)
@@ -243,7 +247,12 @@ class Window(QWidget):
                 df.to_csv("C:\\temp\CoralAllUsers.csv", na_rep="None")
             else:
                 df.to_csv(os.path.expanduser("~/Desktop/AllUsers.csv"))
-            QMessageBox.about(self, "Warning", "Check your desktop for the csv file!\n*Windows: See temp folder in C: drive*")
+            # QMessageBox.about(self, "Warning", "Check your desktop for the csv file!\n*Windows: See temp folder in C: drive*")
+            
+            msg = QMessageBox(QMessageBox.Warning, "Notice", "Check your desktop for the csv file!\n*Windows: see temp folder in C: drive*")
+            msg.setStyleSheet(get_basic_styling())
+            msg.exec_()
+
             mydb.close()
         except mydb.Error as e:
            print("Failed To Connect to Database")
