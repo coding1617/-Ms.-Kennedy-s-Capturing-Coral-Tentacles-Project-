@@ -42,15 +42,12 @@ class AddUserFile(QWidget):
         layout.addWidget(self.actual_code_Label, 1, 1)
         layout.addWidget(self.submitButton, 2, 0)
         
-        # print(self.name_of_person_Display.text())
-        
         self.setLayout(layout)
 
         self.setStyleSheet(
             "QLabel {"
             " color: #00adb5;"
             " font-family: 'Lucida Sans Typewriter';"
-            # " font-size: 15px;"
             " font-size: 17px;"
             " font-weight: bold;"
             "}"
@@ -59,7 +56,6 @@ class AddUserFile(QWidget):
             " color: white;"
             " background-color: #3f72af;"
             " font-family: 'Lucida Sans Typewriter';"
-            # " font-size: 15px;"
             " font-size: 17px;"
             " font-weight: bold;"
             " border-radius: 10px;"
@@ -71,7 +67,6 @@ class AddUserFile(QWidget):
             "}"
 
             "QLineEdit {"
-            # " font-size: 15px;"
             " font-size: 17px;"
             " font-family: 'Lucida Sans Typewriter';"
             "}"

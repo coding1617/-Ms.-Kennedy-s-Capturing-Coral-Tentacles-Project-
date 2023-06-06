@@ -102,7 +102,6 @@ class Window(QWidget):
             "QLabel {"
             " color: #00adb5;"
             " font-family: 'Lucida Sans Typewriter';"
-            # " font-size: 20px;"
             " font-size: 17px;"
             " font-weight: bold;"
             "}"
@@ -111,7 +110,6 @@ class Window(QWidget):
             " color: white;"
             " background-color: #3f72af;"
             " font-family: 'Lucida Sans Typewriter';"
-            # " font-size: 20px;"
             " font-size: 17px;"
             " font-weight: bold;"
             " border-radius: 15px;"
@@ -124,7 +122,6 @@ class Window(QWidget):
             "}"
 
             "QLineEdit {"
-            # " font-size: 25px;"
             " font-size: 17px;"
             " font-family: 'Lucida Sans Typewriter';"
             "}"
@@ -174,8 +171,6 @@ class Window(QWidget):
                 msg = QMessageBox(QMessageBox.Warning, "Warning", "Please select an entry to delete.")
                 msg.setStyleSheet(get_basic_styling())
                 msg.exec_()
-
-                # QMessageBox.about(self, "Warning", "Please select an entry to delete.")
             else:             
                 question = QMessageBox()
                 response = question.question(self,'', "Are you sure you want to delete the row?", question.Yes | question.No)
@@ -247,7 +242,6 @@ class Window(QWidget):
                 df.to_csv("C:\\temp\CoralAllUsers.csv", na_rep="None")
             else:
                 df.to_csv(os.path.expanduser("~/Desktop/AllUsers.csv"))
-            # QMessageBox.about(self, "Warning", "Check your desktop for the csv file!\n*Windows: See temp folder in C: drive*")
             
             msg = QMessageBox(QMessageBox.Warning, "Notice", "Check your desktop for the csv file!\n*Windows: see temp folder in C: drive*")
             msg.setStyleSheet(get_basic_styling())
@@ -267,10 +261,8 @@ class Window(QWidget):
             
             mycursor.execute("SELECT users_code FROM users WHERE users_name = '%s'" % getAdmin())
             myresult3 = mycursor.fetchall()
-            # print(myresult3)
-            # print(myresult3[0])
+            
             code = ''.join(myresult3[0])
-            # print(code)
             
             mydb.commit()
             
